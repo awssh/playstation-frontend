@@ -16,14 +16,12 @@ function Profile({ user }) {
     winsCount: 0
   })
 
-  /* ===== FETCH STATS ===== */
   useEffect(() => {
     if (!user) return
 
     const fetchStats = async () => {
       const res = await fetch(
-        `http://localhost:3000/api/player/profile/stats?userId=${user.id}`
-      )
+        `http://localhost:3000/api/player/profile/stats?userId=${user.id}`)
 
       if (!res.ok) {
         setStats({
@@ -45,14 +43,11 @@ function Profile({ user }) {
     fetchStats()
   }, [user])
 
-  /* ===== FETCH PROFILE DETAILS ===== */
   useEffect(() => {
     if (!user) return
 
     const fetchProfile = async () => {
-      const res = await fetch(
-        `http://localhost:3000/api/player/profile/details?userId=${user.id}`
-      )
+      const res = await fetch(`http://localhost:3000/api/player/profile/details?userId=${user.id}`)
 
       if (!res.ok) {
         setLoading(false)
@@ -77,7 +72,6 @@ function Profile({ user }) {
     })
   }
 
-  /* ===== SAVE PROFILE ===== */
   const handleSave = async () => {
     const res = await fetch(
       "http://localhost:3000/api/player/profile/details",
