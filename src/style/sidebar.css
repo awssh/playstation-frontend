@@ -1,0 +1,106 @@
+/* ============================
+   SIDEBAR – PLAYSTATION THEME
+============================ */
+
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: linear-gradient(180deg, #020617, #020a1a);
+  border-right: 1px solid #1e293b;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+/* ============================
+   LOGO
+============================ */
+
+.sidebar-logo {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+}
+
+.sidebar-logo span {
+  color: #1f6bff;
+}
+
+/* ============================
+   MENU
+============================ */
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-menu a {
+  text-decoration: none;
+  color: #cbd5f5;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Hover */
+.sidebar-menu a:hover {
+  background: #0b1533;
+  color: #ffffff;
+}
+
+/* Active (optional if you add NavLink later) */
+.sidebar-menu a.active {
+  background: #1f6bff;
+  color: #ffffff;
+}
+
+/* ============================
+   LOGOUT
+============================ */
+
+.logout {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: transparent;   /* هذا هو المهم */
+}
+
+
+.logout:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+ .dashboard-page {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #020617, #000000);
+}
+.sidebar {
+  background: #0a1a3a;
+}
+/* FORCE LOGOUT TO BE TRANSPARENT */
+.sidebar .logout {
+  background: transparent !important;
+}
+
+.sidebar .logout:hover {
+  background: transparent !important;
+}

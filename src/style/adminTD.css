@@ -1,0 +1,268 @@
+/* =========================
+   ADMIN DASHBOARD (SCOPE)
+========================= */
+.admin-dashboard {
+  padding: 40px;
+  color: #e5e7eb;
+  background: transparent;
+}
+
+/* =========================
+   HEADER
+========================= */
+.admin-dashboard .admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.admin-dashboard .admin-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.admin-dashboard .primary-btn {
+  background: linear-gradient(90deg, #2563eb, #38bdf8);
+  border: none;
+  padding: 12px 22px;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+  transition: 0.25s;
+}
+
+.admin-dashboard .primary-btn:hover {
+  transform: translateY(-2px);
+}
+
+.admin-dashboard .secondary-btn {
+  background: #374151;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* =========================
+   CREATE FORM
+========================= */
+.admin-dashboard .create-card {
+  background: linear-gradient(180deg, #020617, #020617);
+  border: 1px solid #1e293b;
+  border-radius: 18px;
+  padding: 26px;
+  margin-bottom: 40px;
+}
+
+.admin-dashboard .create-card h3 {
+  margin-bottom: 18px;
+}
+
+.admin-dashboard .create-form .form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.admin-dashboard input,
+.admin-dashboard select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: #020617;
+  border: 1px solid #1e293b;
+  color: #e5e7eb;
+}
+
+/* =========================
+   STATS
+========================= */
+.admin-dashboard .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.admin-dashboard .stat-card {
+  background: linear-gradient(180deg, #020617, #020617);
+  border: 1px solid #1e293b;
+  border-radius: 18px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-dashboard .stat-card h4 {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.admin-dashboard .stat-card p {
+  font-size: 34px;
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+/* Glow hover */
+.admin-dashboard .stat-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(56, 189, 248, 0.15),
+    transparent
+  );
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.admin-dashboard .stat-card:hover::after {
+  opacity: 1;
+}
+
+/* =========================
+   TOURNAMENT LIST
+========================= */
+.admin-dashboard .tournaments-list h3 {
+  margin-bottom: 18px;
+  font-size: 22px;
+}
+
+.admin-dashboard .tournament-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-dashboard .tournament-card {
+  background: linear-gradient(180deg, #020617, #020617);
+  border: 1px solid #1e293b;
+  border-radius: 20px;
+  padding: 26px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 20px;
+  transition: 0.3s;
+}
+
+.admin-dashboard .tournament-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.15);
+}
+
+/* LEFT */
+.admin-dashboard .tournament-card h4 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.admin-dashboard .tournament-card .game {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.admin-dashboard .tournament-card p {
+  font-size: 13px;
+  color: #cbd5f5;
+}
+
+/* RIGHT */
+.admin-dashboard .tournament-info {
+  text-align: right;
+}
+
+.admin-dashboard .tournament-info span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+/* =========================
+   STATUS BADGES
+========================= */
+.admin-dashboard .status {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.admin-dashboard .status.active {
+  background: rgba(22, 163, 74, 0.15);
+  color: #22c55e;
+}
+
+.admin-dashboard .status.upcoming {
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+}
+
+.admin-dashboard .status.completed {
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+}
+
+.admin-dashboard .status.finished {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+}
+/* =========================
+   ADMIN STATS (FIX)
+========================= */
+.admin-dashboard .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.admin-dashboard .stats-grid .stat-card {
+  background: linear-gradient(180deg, #020617, #020617);
+  border: 1px solid #1e293b;
+  border-radius: 18px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+/* =========================
+   FORCE ADMIN STATS GRID
+========================= */
+.admin-stats {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+  margin-bottom: 40px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-stats {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Cards */
+.admin-stats .stat-card {
+  background: linear-gradient(180deg, #020617, #020617);
+  border: 1px solid #1e293b;
+  border-radius: 18px;
+  padding: 24px;
+}
