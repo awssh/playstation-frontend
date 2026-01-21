@@ -12,15 +12,28 @@ function AdminDashboard() {
   const [showForm, setShowForm] = useState(false)
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/tournaments')
-      .then(res => res.json())
-      .then(data => setTournaments(data))
+    const fetchTournaments = async () => {
+   
+        const res = await fetch('http://localhost:3000/api/admin/tournaments', {
+          headers: {
+            'x-role': 'admin'
+          }
+        })
+
+        if (!res.ok) return
+
+        const data = await res.json()
+        setTournaments(Array.isArray(data) ? data : [])
+     
+    }
+
+    fetchTournaments()
   }, [])
 
   const handleCreate = async (e) => {
     e.preventDefault()
 
-    const res = await fetch('http://localhost:3000/api/tournaments', {
+    const res = await fetch('http://localhost:3000/api/admin/tournaments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,6 +47,8 @@ function AdminDashboard() {
         prize
       })
     })
+
+    if (!res.ok) return
 
     const newTournament = await res.json()
     setTournaments(prev => [newTournament, ...prev])
@@ -51,15 +66,16 @@ function AdminDashboard() {
   const active = tournaments.filter(t => t.status === 'active').length
   const completed = tournaments.filter(t => t.status === 'completed').length
 
-  
   return (
     <div className="admin-dashboard">
-
       <div className="admin-container">
 
         <div className="admin-header">
           <h1 className="admin-title">Admin Dashboard</h1>
-          <button className="admin-btn primary-btn" onClick={() => setShowForm(!showForm)}>
+          <button
+            className="admin-btn primary-btn"
+            onClick={() => setShowForm(!showForm)}
+          >
             + Create Tournament
           </button>
         </div>
@@ -84,7 +100,10 @@ function AdminDashboard() {
               <div className="form-row">
                 <div className="form-group">
                   <label>Max Players</label>
-                  <select value={maxPlayers} onChange={e => setMaxPlayers(Number(e.target.value))}>
+                  <select
+                    value={maxPlayers}
+                    onChange={e => setMaxPlayers(Number(e.target.value))}
+                  >
                     <option value={8}>8</option>
                     <option value={16}>16</option>
                     <option value={32}>32</option>
@@ -121,7 +140,6 @@ function AdminDashboard() {
           </div>
         )}
 
-     
         <div className="admin-stats">
           <div className="stat-card"><h4>Total</h4><p>{total}</p></div>
           <div className="stat-card"><h4>Upcoming</h4><p>{upcoming}</p></div>
@@ -129,7 +147,6 @@ function AdminDashboard() {
           <div className="stat-card"><h4>Completed</h4><p>{completed}</p></div>
         </div>
 
- 
         <div className="admin-tournaments">
           <h3 className="admin-section-title">All Tournaments</h3>
 
@@ -148,9 +165,7 @@ function AdminDashboard() {
 
                 <div className="tournament-right tournament-info">
                   <span className="players-count">
-<span className="players-count">
-  Players {Number(t.players_count)}/{t.max_players}
-</span>
+                    Players {Number(t.players_count)}/{t.max_players}
                   </span>
                   <span className={`status ${t.status}`}>
                     {t.status}

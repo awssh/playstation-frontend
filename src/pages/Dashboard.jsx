@@ -11,31 +11,40 @@ function Dashboard({ user }) {
   const [playersCount, setPlayersCount] = useState({})
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/tournaments')
-      .then(res => res.json())
-      .then(data => setTournaments(data))
+    const fetchTournaments = async () => {
+      const res = await fetch('http://localhost:3000/api/player/tournaments')
+
+      if (!res.ok) {
+        setTournaments([])
+        return
+      }
+
+      const data = await res.json()
+      setTournaments(Array.isArray(data) ? data : [])
+    }
+
+    fetchTournaments()
   }, [])
 
   useEffect(() => {
     if (!user) return
 
-    fetch(`http://localhost:3000/api/tournamentRequests/my/${user.id}`)
-      .then(res => res.json())
-      .then(data => setMyRequests(data))
-  }, [user])
+    const fetchMyRequests = async () => {
+      const res = await fetch(
+        `http://localhost:3000/api/player/requests/my/${user.id}`
+      )
 
-  useEffect(() => {
-    tournaments.forEach(t => {
-      fetch(`http://localhost:3000/api/tournamentRequests/approved/${t.id}`)
-        .then(res => res.json())
-        .then(data => {
-          setPlayersCount(prev => ({
-            ...prev,
-            [t.id]: data.length
-          }))
-        })
-    })
-  }, [tournaments])
+      if (!res.ok) {
+        setMyRequests([])
+        return
+      }
+
+      const data = await res.json()
+      setMyRequests(Array.isArray(data) ? data : [])
+    }
+
+    fetchMyRequests()
+  }, [user])
 
   const myTournamentIds = myRequests
     .filter(r => r.status === 'approved')
@@ -49,7 +58,9 @@ function Dashboard({ user }) {
   const availableTournaments = tournaments.filter(t => t.status === 'upcoming')
 
   const totalPlayers = Object.values(playersCount).reduce(
-    (sum, n) => sum + n,0 )
+    (sum, n) => sum + n,
+    0
+  )
 
   return (
     <div className="dashboard-page">
