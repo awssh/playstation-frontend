@@ -1,19 +1,16 @@
-function PlayersList({ players }) {
+function PlayersList({ players = [] }) {
+  if (!Array.isArray(players)) return null
+
   return (
     <div className="players-section">
-      <h3>Registered Players</h3>
+      <h3>Players</h3>
 
-      {players.length === 0 && (
-        <p>No players yet</p>
-      )}
-
-      {players.map((p, index) => (
-        <div key={index} className="player-item">
-          {p.username}
+      {players.map(player => (
+        <div key={player.id} className="player-item">
+          {player.username}
         </div>
       ))}
     </div>
   )
 }
-
 export default PlayersList

@@ -4,7 +4,7 @@ function RequestActions({ tournamentId }) {
   const [requests, setRequests] = useState([]);
 
   const fetchRequests = () => {
-    fetch(`http://localhost:3000/api/tournamentRequests/pending/${tournamentId}`, {
+    fetch(`http://localhost:3000/api/admin/requests/pending/${tournamentId}`, {
       headers: {
         "x-role": "admin"
       }
@@ -19,7 +19,7 @@ function RequestActions({ tournamentId }) {
 
   const approve = async (id) => {
     await fetch(
-      `http://localhost:3000/api/tournamentRequests/approve/${id}`,
+      `http://localhost:3000/api/admin/requests/approve/${id}`,
       {
         method: "PUT",
         headers: { "x-role": "admin" }
@@ -30,7 +30,7 @@ function RequestActions({ tournamentId }) {
 
   const reject = async (id) => {
     await fetch(
-      `http://localhost:3000/api/tournamentRequests/reject/${id}`,
+      `http://localhost:3000/api/admin/requests/reject/${id}`,
       {
         method: "PUT",
         headers: { "x-role": "admin" }

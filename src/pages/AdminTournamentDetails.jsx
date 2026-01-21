@@ -7,11 +7,9 @@ import PlayersList from '../components/admin/PlayersList'
 import MatchesSection from '../components/admin/MatchesSection'
 import RequestActions from '../components/admin/RequestActions'
 
-
 const API = 'http://localhost:3000/api'
 
 function AdminTournamentDetails() {
-  
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -19,105 +17,154 @@ function AdminTournamentDetails() {
   const [players, setPlayers] = useState([])
   const [matches, setMatches] = useState([])
 
-  /* ===== DELETE TOURNAMENT ===== */
-const deleteTournament = async () => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this tournament?"
-  )
+  const fetchTournament = async () => {
+    const res = await fetch(`${API}/admin/tournaments/${id}`, {
+      headers: { 'x-role': 'admin' }
+    })
 
-  if (!confirmDelete) return
+    if (!res.ok) return
 
-  const res = await fetch(`${API}/tournaments/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'x-role': 'admin'
+    const data = await res.json()
+    setTournament(data)
+  }
+
+  const fetchPlayers = async () => {
+    const res = await fetch(`${API}/admin/requests/approved/${id}`, {
+      headers: { 'x-role': 'admin' }
+    })
+
+    if (!res.ok) {
+      setPlayers([])
+      return
     }
-  })
 
-  if (!res.ok) {
-    alert("Delete failed")
-    return
+    const data = await res.json()
+    setPlayers(Array.isArray(data) ? data : [])
   }
 
-  alert("Tournament deleted")
-  navigate('/admin')
-}
+  /* ===== FETCH MATCHES ===== */
+  const fetchMatches = async () => {
+    const res = await fetch(`${API}/admin/matches/${id}`, {
+      headers: { 'x-role': 'admin' }
+    })
 
-  useEffect(() => {
-    fetch(`${API}/tournaments/${id}`)
-      .then(res => res.json())
-      .then(setTournament)
-  }, [id])
+    if (!res.ok) {
+      setMatches([])
+      return
+    }
 
-  const fetchPlayers = () => {
-    fetch(`${API}/tournamentRequests/approved/${id}`)
-      .then(res => res.json())
-      .then(setPlayers)
-  }
-
-  const fetchMatches = () => {
-    fetch(`${API}/matches/${id}`)
-      .then(res => res.json())
-      .then(setMatches)
+    const data = await res.json()
+    setMatches(Array.isArray(data) ? data : [])
   }
 
   useEffect(() => {
+    fetchTournament()
     fetchPlayers()
     fetchMatches()
   }, [id])
 
+  const deleteTournament = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this tournament?"
+    )
+
+    if (!confirmDelete) return
+
+    const res = await fetch(`${API}/admin/tournaments/${id}`, {
+      method: 'DELETE',
+      headers: { 'x-role': 'admin' }
+    })
+
+    if (!res.ok) {
+      alert("Delete failed")
+      return
+    }
+
+    alert("Tournament deleted")
+    navigate('/admin')
+  }
+
+  const startTournament = async () => {
+    const res = await fetch(`${API}/admin/tournaments/${id}/start`, {
+      method: 'PUT',
+      headers: { 'x-role': 'admin' }
+    })
+
+    if (!res.ok) {
+      alert("Failed to start tournament")
+      return
+    }
+
+    const data = await res.json()
+    setTournament(data)
+  }
+
   const generateFirstRound = async () => {
-    await fetch(`${API}/matches/generate/${id}`, {
+    const res = await fetch(`${API}/admin/matches/generate/${id}`, {
       method: 'POST',
+      headers: { 'x-role': 'admin' }
     })
+
+    if (!res.ok) {
+      alert("Failed to generate matches")
+      return
+    }
+
     fetchMatches()
   }
 
+  /* ===== GENERATE NEXT ROUND ===== */
   const generateNextRound = async () => {
-    await fetch(`${API}/matches/next-round/${id}`, {
+    const res = await fetch(`${API}/admin/matches/next-round/${id}`, {
       method: 'POST',
+      headers: { 'x-role': 'admin' }
     })
+
+    if (!res.ok) {
+      alert("Failed to generate next round")
+      return
+    }
+
     fetchMatches()
   }
 
+  /* ===== SET MATCH WINNER ===== */
   const setWinner = async (matchId, winnerId) => {
-    const res = await fetch(`${API}/matches/${matchId}/winner`, {
+    const res = await fetch(`${API}/admin/matches/${matchId}/winner`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'x-role': 'admin'
       },
-      body: JSON.stringify({ winner_id: winnerId }),
+      body: JSON.stringify({ winner_id: winnerId })
     })
+
+    if (!res.ok) return
 
     const data = await res.json()
     fetchMatches()
 
     if (data.tournament_winner) {
       alert("Tournament finished!")
-      fetch(`${API}/tournaments/${id}`)
-        .then(res => res.json())
-        .then(setTournament)
+      fetchTournament()
     }
   }
 
-
   return (
     <div className="tournament-details-page">
-      
       <div className="details-card">
 
         <TournamentHeader
           tournament={tournament}
           playersCount={players.length}
+          startTournament={startTournament}
         />
-        <button
-  className="btn btn-danger"
-  onClick={deleteTournament}
->
-  Delete Tournament
-</button>
 
-<RequestActions tournamentId={id} />
+        <button className="btn btn-danger" onClick={deleteTournament}>
+          Delete Tournament
+        </button>
+
+        <RequestActions tournamentId={id} />
 
         <PlayersList players={players} />
 

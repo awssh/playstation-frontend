@@ -11,20 +11,22 @@ function AllTournaments({ user }) {
   const [statusFilter, setStatusFilter] = useState('all')
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/tournaments')
-      .then(res => res.json())
-      .then(data => {
-        setTournaments(Array.isArray(data) ? data : [])
-        setLoading(false)
-      })
-      .catch(() => {
+    const fetchTournaments = async () => {
+      const res = await fetch('http://localhost:3000/api/player/tournaments')
+
+      if (!res.ok) {
         setTournaments([])
         setLoading(false)
-      })
+        return
+      }
+
+      const data = await res.json()
+      setTournaments(Array.isArray(data) ? data : [])
+      setLoading(false)
+    }
+
+    fetchTournaments()
   }, [])
-
-
-
 
   const filteredTournaments = tournaments.filter(t => {
     const matchSearch =
@@ -62,8 +64,8 @@ function AllTournaments({ user }) {
 
       <div className="cards-grid">
         {filteredTournaments.map(t => {
-     const approved = Number(t.players_count) || 0
-const progress = (approved / t.max_players) * 100
+          const approved = Number(t.players_count) || 0
+          const progress = (approved / t.max_players) * 100
 
           return (
             <Link
@@ -86,7 +88,7 @@ const progress = (approved / t.max_players) * 100
 
               <div className="info">
                 <span>Players</span>
-<span>{approved}/{t.max_players}</span>
+                <span>{approved}/{t.max_players}</span>
               </div>
 
               <div className="info">
