@@ -5,7 +5,7 @@ function Navbar({ user, setUser, setIsLoggedIn }) {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-      localStorage.removeItem("user")   // ✅ IMPORTANT
+      localStorage.removeItem("user")   
 
     setUser(null)
     setIsLoggedIn(false)
