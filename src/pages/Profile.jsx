@@ -1,71 +1,106 @@
-import { useState, useEffect } from "react";
-import "../style/profile.css";
+import { useState, useEffect } from "react"
+import "../style/profile.css"
 
 function Profile({ user }) {
-  const [edit, setEdit] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [edit, setEdit] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const [formData, setFormData] = useState({
     username: "",
     email: ""
-  });
-const [stats, setStats] = useState({
-  joinedCount: 0,
-  activeCount: 0,
-  winsCount: 0
-});
-useEffect(() => {
-  if (!user) return;
+  })
 
-  fetch(`http://localhost:3000/api/profile/stats?userId=${user.id}`)
-    .then(res => res.json())
-    .then(data => setStats(data));
-}, [user]);
+  const [stats, setStats] = useState({
+    joinedCount: 0,
+    activeCount: 0,
+    winsCount: 0
+  })
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) return
 
-    fetch(`http://localhost:3000/api/profile/details?userId=${user.id}`)
-      .then(res => res.json())
-      .then(data => {
-        setFormData({
-          username: data.username,
-          email: data.email
-        });
-        setLoading(false);
+    const fetchStats = async () => {
+      const res = await fetch(
+        `http://localhost:3000/api/player/profile/stats?userId=${user.id}`)
+
+      if (!res.ok) {
+        setStats({
+          joinedCount: 0,
+          activeCount: 0,
+          winsCount: 0
+        })
+        return
+      }
+
+      const data = await res.json()
+      setStats({
+        joinedCount: data.tournaments,
+        activeCount: data.active,
+        winsCount: data.wins
       })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, [user]);
+    }
+
+    fetchStats()
+  }, [user])
+
+  useEffect(() => {
+    if (!user) return
+
+    const fetchProfile = async () => {
+      const res = await fetch(`http://localhost:3000/api/player/profile/details?userId=${user.id}`)
+
+      if (!res.ok) {
+        setLoading(false)
+        return
+      }
+
+      const data = await res.json()
+      setFormData({
+        username: data.username,
+        email: data.email
+      })
+      setLoading(false)
+    }
+
+    fetchProfile()
+  }, [user])
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
-  };
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
 
   const handleSave = async () => {
-    await fetch("http://localhost:3000/api/profile/details", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        userId: user.id,
-        username: formData.username,
-        email: formData.email
-      })
-    });
+    const res = await fetch(
+      "http://localhost:3000/api/player/profile/details",
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          username: formData.username,
+          email: formData.email
+        })
+      }
+    )
+
+    if (!res.ok) return
 
     const updatedUser = {
       ...user,
       username: formData.username,
       email: formData.email
-    };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    setEdit(false);
-  };
+    }
 
+    localStorage.setItem("user", JSON.stringify(updatedUser))
+    setEdit(false)
+  }
+
+  if (loading) return <p>Loading...</p>
 
   return (
     <div className="profile-page">
@@ -82,24 +117,23 @@ useEffect(() => {
           <p className="email">{formData.email}</p>
 
           <span className="role-badge">{user.role}</span>
-<div className="stats">
-  <div>
-    <strong>{stats.joinedCount}</strong>
-    <span>Tournaments</span>
-  </div>
 
-  <div>
-    <strong>{stats.winsCount}</strong>
-    <span>Wins</span>
-  </div>
+          <div className="stats">
+            <div>
+              <strong>{stats.joinedCount}</strong>
+              <span>Tournaments</span>
+            </div>
 
-  <div>
-    <strong>{stats.activeCount}</strong>
-    <span>Active</span>
-  </div>
-</div>
+            <div>
+              <strong>{stats.winsCount}</strong>
+              <span>Wins</span>
+            </div>
 
-     
+            <div>
+              <strong>{stats.activeCount}</strong>
+              <span>Active</span>
+            </div>
+          </div>
         </div>
 
         {/* RIGHT */}
@@ -149,12 +183,11 @@ useEffect(() => {
               <strong>Account Type:</strong> {user.role}
             </li>
           </ul>
-          
         </div>
 
       </div>
     </div>
-  );
+  )
 }
 
-export default Profile;
+export default Profile

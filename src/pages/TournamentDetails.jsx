@@ -17,54 +17,95 @@ function TournamentDetails({ user }) {
   const [requestStatus, setRequestStatus] = useState(null)
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/tournaments/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        setTournament(data)
+    const fetchTournament = async () => {
+      const res = await fetch(`http://localhost:3000/api/player/tournaments/${id}`)
+
+      if (!res.ok) {
         setLoading(false)
-      })
-      .catch(() => setLoading(false))
+        return
+      }
+
+      const data = await res.json()
+      setTournament(data)
+      setLoading(false)
+    }
+
+    fetchTournament()
   }, [id])
 
   useEffect(() => {
     if (!tournament) return
 
-    fetch(`http://localhost:3000/api/tournamentRequests/approved/${tournament.id}`)
-      .then(res => res.json())
-      .then(setPlayers)
+    const fetchPlayers = async () => {
+      const res = await fetch(`http://localhost:3000/api/player/requests/approved/${tournament.id}`)
+
+      if (!res.ok) {
+        setPlayers([])
+        return
+      }
+
+      const data = await res.json()
+      setPlayers(Array.isArray(data) ? data : [])
+    }
+
+    fetchPlayers()
   }, [tournament])
 
   useEffect(() => {
     if (!tournament) return
 
-    fetch(`http://localhost:3000/api/matches/${tournament.id}`)
-      .then(res => res.json())
-      .then(setMatches)
-      .catch(() => setMatches([]))
+    const fetchMatches = async () => {
+      const res = await fetch(`http://localhost:3000/api/player/matches/${tournament.id}`)
+
+      if (!res.ok) {
+        setMatches([])
+        return
+      }
+
+      const data = await res.json()
+      setMatches(Array.isArray(data) ? data : [])
+    }
+
+    fetchMatches()
   }, [tournament])
 
   useEffect(() => {
     if (!user || !tournament) return
 
-    fetch(
-      `http://localhost:3000/api/tournamentRequests/status?user_id=${user.id}&tournament_id=${tournament.id}`
-    )
-      .then(res => res.json())
-      .then(data => setRequestStatus(data.status))
+    const fetchRequestStatus = async () => {
+      const res = await fetch(`http://localhost:3000/api/player/requests/status?user_id=${user.id}&tournament_id=${tournament.id}` )
+
+      if (!res.ok) {
+        setRequestStatus(null)
+        return
+      }
+
+      const data = await res.json()
+      setRequestStatus(data.status)
+    }
+
+    fetchRequestStatus()
   }, [user, tournament])
 
   const requestJoin = async () => {
-    if (!user) return alert('Please login first')
+    if (!user) {
+      alert('Please login first')
+      return
+    }
+
     if (tournament.status !== 'upcoming') return
 
-    const res = await fetch('http://localhost:3000/api/tournamentRequests/join', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: user.id,
-        tournament_id: tournament.id
-      })
-    })
+    const res = await fetch(
+      'http://localhost:3000/api/player/requests/join',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: user.id,
+          tournament_id: tournament.id
+        })
+      }
+    )
 
     if (res.ok) setRequestStatus('pending')
   }
@@ -95,13 +136,13 @@ function TournamentDetails({ user }) {
 
         <PlayersList players={players} />
 
-
         <MatchesSection matches={matches} />
-{tournament.winner_name && (
-  <p className="tournament-winner">
-    🏆 Tournament Winner: {tournament.winner_name}
-  </p>
-)}
+
+        {tournament.winner_name && (
+          <p className="tournament-winner">
+            🏆 Tournament Winner: {tournament.winner_name}
+          </p>
+        )}
 
       </div>
     </div>

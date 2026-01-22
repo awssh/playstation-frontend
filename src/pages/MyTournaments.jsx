@@ -10,13 +10,23 @@ function MyTournaments({ user }) {
   useEffect(() => {
     if (!user) return
 
-    fetch(`http://localhost:3000/api/tournamentRequests/my/${user.id}`)
-      .then(res => res.json())
-      .then(data => {
-        setMyTournaments(data)
+    const fetchMyTournaments = async () => {
+      const res = await fetch(
+        `http://localhost:3000/api/player/requests/my/${user.id}`
+      )
+
+      if (!res.ok) {
+        setMyTournaments([])
         setLoading(false)
-      })
-      .catch(() => setLoading(false))
+        return
+      }
+
+      const data = await res.json()
+      setMyTournaments(Array.isArray(data) ? data : [])
+      setLoading(false)
+    }
+
+    fetchMyTournaments()
   }, [user])
 
   if (loading) return <p>Loading...</p>

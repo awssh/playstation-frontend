@@ -21,10 +21,14 @@ function App() {
   const [user, setUser] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 useEffect(() => {
-  localStorage.removeItem("user")
-  setUser(null)
-  setIsLoggedIn(false)
+  const storedUser = localStorage.getItem("user")
+  if (storedUser) {
+    const parsedUser = JSON.parse(storedUser)
+    setUser(parsedUser)
+    setIsLoggedIn(true)
+  }
 }, [])
+
 
 
 
@@ -110,7 +114,6 @@ useEffect(() => {
             }
           />
 
-          {/* ===== ADMIN ROUTES (SAFE) ===== */}
           <Route
             path="/admin"
             element={<AdminRoute user={user} isLoggedIn={isLoggedIn} />}
@@ -119,7 +122,6 @@ useEffect(() => {
             <Route path="tournaments/:id" element={<AdminTournamentDetails />} />
           </Route>
 
-          {/* ===== FALLBACK ===== */}
           <Route path="*" element={<Navigate to="/" />} />
 
         </Routes>

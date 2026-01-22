@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import '../style/auth.css'
 
-
 function Login({ setUser, setIsLoggedIn }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -13,45 +12,39 @@ function Login({ setUser, setIsLoggedIn }) {
     e.preventDefault()
     setMessage('')
 
-    try {
-      const res = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
+    const res = await fetch('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email,
+        password
       })
+    })
 
+    if (!res.ok) {
       const data = await res.json()
+      setMessage(data.message || 'Login failed')
+      return
+    }
 
-      if (!res.ok) {
-        setMessage(data.message || 'Login failed')
-        return
-      }
+    const data = await res.json()
+    const loggedUser = data.user || data
 
-      const loggedUser = data.user || data
+    if (!loggedUser || !loggedUser.role) {
+      setMessage('Invalid login response from server')
+      return
+    }
 
-if (!loggedUser || !loggedUser.role) {
-  setMessage('Invalid login response from server')
-  return
-}
+    setUser(loggedUser)
+    setIsLoggedIn(true)
+    localStorage.setItem('user', JSON.stringify(loggedUser))
 
-setUser(loggedUser)
-setIsLoggedIn(true)
-localStorage.setItem('user', JSON.stringify(loggedUser))
-
-if (loggedUser.role === 'admin') {
-  navigate('/admin/requests')
-} else {
-  navigate('/')
-}
-
-    } catch (err) {
-      console.error(err)
-      setMessage('Server error')
+    if (loggedUser.role === 'admin') {
+      navigate('/admin')
+    } else {
+      navigate('/')
     }
   }
 
