@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import '../style/auth.css'
+import API_URL from '../api'
 
 function Login({ setUser, setIsLoggedIn }) {
   const [email, setEmail] = useState('')
@@ -12,7 +13,7 @@ function Login({ setUser, setIsLoggedIn }) {
     e.preventDefault()
     setMessage('')
 
-    const res = await fetch('http://localhost:3000/api/auth/login', {
+    const res = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
