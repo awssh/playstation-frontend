@@ -51,25 +51,29 @@ User authentication is handled and session data is stored on the client side.
 
 ---
 
-## 🗂️ Project Structure
+## 📁 Project Structure
+
+```text
 client/
-│── src/
-│ ├── components/
-│ │ ├── admin/
-│ │ ├── tournament/
-│ │ ├── Navbar.jsx
-│ │ └── MatchTime.jsx
-│ ├── pages/
-│ │ ├── AllTournaments.jsx
-│ │ ├── TournamentDetails.jsx
-│ │ ├── MyTournaments.jsx
-│ │ ├── Profile.jsx
-│ │ ├── AdminDashboard.jsx
-│ │ └── AdminTournamentDetails.jsx
-│ ├── routes/
-│ ├── style/
-│ ├── App.jsx
-│ └── main.jsx
+└── src/
+    ├── components/
+    │   ├── admin/
+    │   ├── tournament/
+    │   ├── Navbar.jsx
+    │   └── MatchTime.jsx
+    ├── pages/
+    │   ├── AllTournaments.jsx
+    │   ├── TournamentDetails.jsx
+    │   ├── MyTournaments.jsx
+    │   ├── Profile.jsx
+    │   ├── AdminDashboard.jsx
+    │   └── AdminTournamentDetails.jsx
+    ├── routes/
+    ├── style/
+    ├── App.jsx
+    └── main.jsx
+
+```
 
 ---
 
