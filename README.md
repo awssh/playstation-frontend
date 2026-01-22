@@ -52,4 +52,54 @@ User authentication is handled and session data is stored on the client side.
 ---
 
 ## 🗂️ Project Structure
+client/
+│── src/
+│ ├── components/
+│ │ ├── admin/
+│ │ ├── tournament/
+│ │ ├── Navbar.jsx
+│ │ └── MatchTime.jsx
+│ ├── pages/
+│ │ ├── AllTournaments.jsx
+│ │ ├── TournamentDetails.jsx
+│ │ ├── MyTournaments.jsx
+│ │ ├── Profile.jsx
+│ │ ├── AdminDashboard.jsx
+│ │ └── AdminTournamentDetails.jsx
+│ ├── routes/
+│ ├── style/
+│ ├── App.jsx
+│ └── main.jsx
+
+---
+
+## 🛠️ Technologies Used
+
+- React (with Hooks)
+- Vite
+- React Router DOM
+- Bootstrap & React-Bootstrap
+- Framer Motion
+- Fetch API
+- CSS (custom styles)
+
+---
+
+## 🔐 Authentication & Authorization
+
+- Users must log in to access protected pages
+- Admin and Player roles have different access permissions
+- Authentication state is managed on the frontend
+- Session data is stored using **localStorage**
+
+---
+
+## 🚀 Getting Started
+
+To run the frontend locally:
+
+```bash
+cd client
+npm install
+npm run dev
 
