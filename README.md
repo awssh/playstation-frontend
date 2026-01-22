@@ -1,16 +1,55 @@
-# React + Vite
+# 🎮 PlayStation Tournament System – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **frontend** of the PlayStation Tournament System web application.
+It is built using **React** and **Vite** and provides the user interface for players and admins
+to interact with tournaments.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎯 Project Description
 
-## React Compiler
+The application allows users to view and manage PlayStation tournaments.
+There are two main roles in the system:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 👤 Player
+- View all tournaments
+- View tournament details
+- Join tournaments
+- View personal tournaments
+- Edit personal profile
 
-## Expanding the ESLint configuration
+### 🛠️ Admin
+- Create tournaments
+- Edit tournament details
+- Manage players
+- View and control tournament matches
+- Approve or reject requests
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The frontend communicates with a backend API to fetch and update data.
+User authentication is handled and session data is stored on the client side.
+
+---
+
+## 🧑‍💻 User Requirements
+
+- Users can **sign up** and **log in**
+- Logged-in users can access protected pages
+- Different pages are shown based on the user role (Admin / Player)
+
+### Player Requirements
+- View all tournaments
+- Join tournaments
+- View joined tournaments
+- View match time and tournament details
+- Update profile information
+
+### Admin Requirements
+- Access admin dashboard
+- Create and manage tournaments
+- View players list
+- Manage matches and requests
+
+---
+
+## 🗂️ Project Structure
+
