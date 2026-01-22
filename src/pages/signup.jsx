@@ -1,46 +1,51 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import "../style/auth.css";
+import { useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import "../style/auth.css"
+
+import API_URL from "../api"
 
 function SignUp() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [message, setMessage] = useState("")
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleSignUp = async (e) => {
-    e.preventDefault();
-    setMessage("");
+    e.preventDefault()
+    setMessage("")
 
     try {
-      const res = await fetch("http://localhost:3000/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-          role: "player",
-        }),
-      });
+      const res = await fetch(
+        API_URL + "/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            username,
+            email,
+            password,
+            role: "player"
+          })
+        }
+      )
 
-      const data = await res.json();
+      const data = await res.json()
 
       if (!res.ok) {
-        setMessage(data.message);
-        return;
+        setMessage(data.message || "Signup failed")
+        return
       }
 
-      navigate("/");
-
+      navigate("/")
     } catch (error) {
-      setMessage("Server error");
+      console.error("Signup error", error)
+      setMessage("Server error")
     }
-  };
+  }
 
   return (
     <div className="auth-page">
@@ -88,7 +93,7 @@ function SignUp() {
 
       </div>
     </div>
-  );
+  )
 }
 
-export default SignUp;
+export default SignUp

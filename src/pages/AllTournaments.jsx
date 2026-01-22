@@ -4,6 +4,8 @@ import MatchTime from '../components/MatchTime'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
+import API_URL from '../api'
+
 function AllTournaments({ user }) {
   const [tournaments, setTournaments] = useState([])
   const [loading, setLoading] = useState(true)
@@ -12,17 +14,25 @@ function AllTournaments({ user }) {
 
   useEffect(() => {
     const fetchTournaments = async () => {
-      const res = await fetch('http://localhost:3000/api/player/tournaments')
+      try {
+        const res = await fetch(
+          API_URL + "/player/tournaments"
+        )
 
-      if (!res.ok) {
+        if (!res.ok) {
+          setTournaments([])
+          setLoading(false)
+          return
+        }
+
+        const data = await res.json()
+        setTournaments(Array.isArray(data) ? data : [])
+        setLoading(false)
+      } catch (err) {
+        console.error("Failed to fetch tournaments", err)
         setTournaments([])
         setLoading(false)
-        return
       }
-
-      const data = await res.json()
-      setTournaments(Array.isArray(data) ? data : [])
-      setLoading(false)
     }
 
     fetchTournaments()

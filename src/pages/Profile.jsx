@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import "../style/profile.css"
 
-// API URL directly from .env (Vite)
 const API_URL = import.meta.env.VITE_API_URL
 
 function Profile({ user }) {
@@ -19,7 +18,6 @@ function Profile({ user }) {
     winsCount: 0
   })
 
-  // ===== FETCH STATS =====
   useEffect(() => {
     if (!user || !API_URL) return
 
@@ -50,7 +48,6 @@ function Profile({ user }) {
     fetchStats()
   }, [user])
 
-  // ===== FETCH PROFILE =====
   useEffect(() => {
     if (!user || !API_URL) return
 
@@ -77,7 +74,6 @@ function Profile({ user }) {
     fetchProfile()
   }, [user])
 
-  // ===== INPUT CHANGE =====
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -85,7 +81,6 @@ function Profile({ user }) {
     })
   }
 
-  // ===== SAVE PROFILE =====
   const handleSave = async () => {
     try {
       const res = await fetch(

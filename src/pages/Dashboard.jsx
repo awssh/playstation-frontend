@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import '../style/dashboard.css'
 import '../style/layout.css'
 
+import API_URL from '../api'
+
 function Dashboard({ user }) {
   const navigate = useNavigate()
 
@@ -12,15 +14,22 @@ function Dashboard({ user }) {
 
   useEffect(() => {
     const fetchTournaments = async () => {
-      const res = await fetch('http://localhost:3000/api/player/tournaments')
+      try {
+        const res = await fetch(
+          API_URL + "/player/tournaments"
+        )
 
-      if (!res.ok) {
+        if (!res.ok) {
+          setTournaments([])
+          return
+        }
+
+        const data = await res.json()
+        setTournaments(Array.isArray(data) ? data : [])
+      } catch (err) {
+        console.error("Failed to fetch tournaments", err)
         setTournaments([])
-        return
       }
-
-      const data = await res.json()
-      setTournaments(Array.isArray(data) ? data : [])
     }
 
     fetchTournaments()
@@ -30,17 +39,22 @@ function Dashboard({ user }) {
     if (!user) return
 
     const fetchMyRequests = async () => {
-      const res = await fetch(
-        `http://localhost:3000/api/player/requests/my/${user.id}`
-      )
+      try {
+        const res = await fetch(
+          API_URL + "/player/requests/my/" + user.id
+        )
 
-      if (!res.ok) {
+        if (!res.ok) {
+          setMyRequests([])
+          return
+        }
+
+        const data = await res.json()
+        setMyRequests(Array.isArray(data) ? data : [])
+      } catch (err) {
+        console.error("Failed to fetch user requests", err)
         setMyRequests([])
-        return
       }
-
-      const data = await res.json()
-      setMyRequests(Array.isArray(data) ? data : [])
     }
 
     fetchMyRequests()

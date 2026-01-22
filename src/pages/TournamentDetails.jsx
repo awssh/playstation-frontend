@@ -7,6 +7,8 @@ import PlayersList from '../components/tournament/PlayersList'
 import MatchesSection from '../components/tournament/MatchesSection'
 import JoinSection from '../components/tournament/JoinSection'
 
+import API_URL from '../api'
+
 function TournamentDetails({ user }) {
   const { id } = useParams()
 
@@ -18,16 +20,23 @@ function TournamentDetails({ user }) {
 
   useEffect(() => {
     const fetchTournament = async () => {
-      const res = await fetch(`http://localhost:3000/api/player/tournaments/${id}`)
+      try {
+        const res = await fetch(
+          API_URL + "/player/tournaments/" + id
+        )
 
-      if (!res.ok) {
+        if (!res.ok) {
+          setLoading(false)
+          return
+        }
+
+        const data = await res.json()
+        setTournament(data)
         setLoading(false)
-        return
+      } catch (err) {
+        console.error("Failed to fetch tournament", err)
+        setLoading(false)
       }
-
-      const data = await res.json()
-      setTournament(data)
-      setLoading(false)
     }
 
     fetchTournament()
@@ -37,15 +46,22 @@ function TournamentDetails({ user }) {
     if (!tournament) return
 
     const fetchPlayers = async () => {
-      const res = await fetch(`http://localhost:3000/api/player/requests/approved/${tournament.id}`)
+      try {
+        const res = await fetch(
+          API_URL + "/player/requests/approved/" + tournament.id
+        )
 
-      if (!res.ok) {
+        if (!res.ok) {
+          setPlayers([])
+          return
+        }
+
+        const data = await res.json()
+        setPlayers(Array.isArray(data) ? data : [])
+      } catch (err) {
+        console.error("Failed to fetch players", err)
         setPlayers([])
-        return
       }
-
-      const data = await res.json()
-      setPlayers(Array.isArray(data) ? data : [])
     }
 
     fetchPlayers()
@@ -55,15 +71,22 @@ function TournamentDetails({ user }) {
     if (!tournament) return
 
     const fetchMatches = async () => {
-      const res = await fetch(`http://localhost:3000/api/player/matches/${tournament.id}`)
+      try {
+        const res = await fetch(
+          API_URL + "/player/matches/" + tournament.id
+        )
 
-      if (!res.ok) {
+        if (!res.ok) {
+          setMatches([])
+          return
+        }
+
+        const data = await res.json()
+        setMatches(Array.isArray(data) ? data : [])
+      } catch (err) {
+        console.error("Failed to fetch matches", err)
         setMatches([])
-        return
       }
-
-      const data = await res.json()
-      setMatches(Array.isArray(data) ? data : [])
     }
 
     fetchMatches()
@@ -73,15 +96,26 @@ function TournamentDetails({ user }) {
     if (!user || !tournament) return
 
     const fetchRequestStatus = async () => {
-      const res = await fetch(`http://localhost:3000/api/player/requests/status?user_id=${user.id}&tournament_id=${tournament.id}` )
+      try {
+        const res = await fetch(
+          API_URL +
+            "/player/requests/status?user_id=" +
+            user.id +
+            "&tournament_id=" +
+            tournament.id
+        )
 
-      if (!res.ok) {
+        if (!res.ok) {
+          setRequestStatus(null)
+          return
+        }
+
+        const data = await res.json()
+        setRequestStatus(data.status)
+      } catch (err) {
+        console.error("Failed to fetch request status", err)
         setRequestStatus(null)
-        return
       }
-
-      const data = await res.json()
-      setRequestStatus(data.status)
     }
 
     fetchRequestStatus()
@@ -95,19 +129,23 @@ function TournamentDetails({ user }) {
 
     if (tournament.status !== 'upcoming') return
 
-    const res = await fetch(
-      'http://localhost:3000/api/player/requests/join',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: user.id,
-          tournament_id: tournament.id
-        })
-      }
-    )
+    try {
+      const res = await fetch(
+        API_URL + "/player/requests/join",
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: user.id,
+            tournament_id: tournament.id
+          })
+        }
+      )
 
-    if (res.ok) setRequestStatus('pending')
+      if (res.ok) setRequestStatus('pending')
+    } catch (err) {
+      console.error("Join request failed", err)
+    }
   }
 
   if (loading) return <p>Loading tournament...</p>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../style/admin.css'
+import API_URL from '../api'
 
 function AdminDashboard() {
   const [tournaments, setTournaments] = useState([])
@@ -13,18 +14,16 @@ function AdminDashboard() {
 
   useEffect(() => {
     const fetchTournaments = async () => {
-   
-        const res = await fetch('http://localhost:3000/api/admin/tournaments', {
-          headers: {
-            'x-role': 'admin'
-          }
-        })
+      const res = await fetch(`${API_URL}/admin/tournaments`, {
+        headers: {
+          'x-role': 'admin'
+        }
+      })
 
-        if (!res.ok) return
+      if (!res.ok) return
 
-        const data = await res.json()
-        setTournaments(Array.isArray(data) ? data : [])
-     
+      const data = await res.json()
+      setTournaments(Array.isArray(data) ? data : [])
     }
 
     fetchTournaments()
@@ -33,7 +32,7 @@ function AdminDashboard() {
   const handleCreate = async (e) => {
     e.preventDefault()
 
-    const res = await fetch('http://localhost:3000/api/admin/tournaments', {
+    const res = await fetch(`${API_URL}/admin/tournaments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

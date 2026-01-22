@@ -7,7 +7,7 @@ import PlayersList from '../components/admin/PlayersList'
 import MatchesSection from '../components/admin/MatchesSection'
 import RequestActions from '../components/admin/RequestActions'
 
-const API = 'http://localhost:3000/api'
+import API_URL from '../api'
 
 function AdminTournamentDetails() {
   const { id } = useParams()
@@ -18,42 +18,59 @@ function AdminTournamentDetails() {
   const [matches, setMatches] = useState([])
 
   const fetchTournament = async () => {
-    const res = await fetch(`${API}/admin/tournaments/${id}`, {
-      headers: { 'x-role': 'admin' }
-    })
+    try {
+      const res = await fetch(
+        API_URL + "/admin/tournaments/" + id,
+        { headers: { 'x-role': 'admin' } }
+      )
 
-    if (!res.ok) return
+      if (!res.ok) return
 
-    const data = await res.json()
-    setTournament(data)
+      const data = await res.json()
+      setTournament(data)
+    } catch (err) {
+      console.error("Failed to fetch tournament", err)
+    }
   }
 
   const fetchPlayers = async () => {
-    const res = await fetch(`${API}/admin/requests/approved/${id}`, {
-      headers: { 'x-role': 'admin' }
-    })
+    try {
+      const res = await fetch(
+        API_URL + "/admin/requests/approved/" + id,
+        { headers: { 'x-role': 'admin' } }
+      )
 
-    if (!res.ok) {
+      if (!res.ok) {
+        setPlayers([])
+        return
+      }
+
+      const data = await res.json()
+      setPlayers(Array.isArray(data) ? data : [])
+    } catch (err) {
+      console.error("Failed to fetch players", err)
       setPlayers([])
-      return
     }
-
-    const data = await res.json()
-    setPlayers(Array.isArray(data) ? data : [])
   }
 
   const fetchMatches = async () => {
-    const res = await fetch(`${API}/admin/matches/${id}`, {
-      headers: { 'x-role': 'admin' }
-    })
+    try {
+      const res = await fetch(
+        API_URL + "/admin/matches/" + id,
+        { headers: { 'x-role': 'admin' } }
+      )
 
-    if (!res.ok) {
+      if (!res.ok) {
+        setMatches([])
+        return
+      }
+
+      const data = await res.json()
+      setMatches(Array.isArray(data) ? data : [])
+    } catch (err) {
+      console.error("Failed to fetch matches", err)
       setMatches([])
-      return
     }
-
-    const data = await res.json()
-    setMatches(Array.isArray(data) ? data : [])
   }
 
   useEffect(() => {
@@ -69,81 +86,120 @@ function AdminTournamentDetails() {
 
     if (!confirmDelete) return
 
-    const res = await fetch(`${API}/admin/tournaments/${id}`, {
-      method: 'DELETE',
-      headers: { 'x-role': 'admin' }
-    })
+    try {
+      const res = await fetch(
+        API_URL + "/admin/tournaments/" + id,
+        {
+          method: 'DELETE',
+          headers: { 'x-role': 'admin' }
+        }
+      )
 
-    if (!res.ok) {
+      if (!res.ok) {
+        alert("Delete failed")
+        return
+      }
+
+      alert("Tournament deleted")
+      navigate('/admin')
+    } catch (err) {
+      console.error("Delete tournament failed", err)
       alert("Delete failed")
-      return
     }
-
-    alert("Tournament deleted")
-    navigate('/admin')
   }
 
   const startTournament = async () => {
-    const res = await fetch(`${API}/admin/tournaments/${id}/start`, {
-      method: 'PUT',
-      headers: { 'x-role': 'admin' }
-    })
+    try {
+      const res = await fetch(
+        API_URL + "/admin/tournaments/" + id + "/start",
+        {
+          method: 'PUT',
+          headers: { 'x-role': 'admin' }
+        }
+      )
 
-    if (!res.ok) {
+      if (!res.ok) {
+        alert("Failed to start tournament")
+        return
+      }
+
+      const data = await res.json()
+      setTournament(data)
+    } catch (err) {
+      console.error("Start tournament failed", err)
       alert("Failed to start tournament")
-      return
     }
-
-    const data = await res.json()
-    setTournament(data)
   }
 
   const generateFirstRound = async () => {
-    const res = await fetch(`${API}/admin/matches/generate/${id}`, {
-      method: 'POST',
-      headers: { 'x-role': 'admin' }
-    })
+    try {
+      const res = await fetch(
+        API_URL + "/admin/matches/generate/" + id,
+        {
+          method: 'POST',
+          headers: { 'x-role': 'admin' }
+        }
+      )
 
-    if (!res.ok) {
+      if (!res.ok) {
+        alert("Failed to generate matches")
+        return
+      }
+
+      fetchMatches()
+    } catch (err) {
+      console.error("Generate first round failed", err)
       alert("Failed to generate matches")
-      return
     }
-
-    fetchMatches()
   }
 
   const generateNextRound = async () => {
-    const res = await fetch(`${API}/admin/matches/next-round/${id}`, {
-      method: 'POST',
-      headers: { 'x-role': 'admin' }
-    })
+    try {
+      const res = await fetch(
+        API_URL + "/admin/matches/next-round/" + id,
+        {
+          method: 'POST',
+          headers: { 'x-role': 'admin' }
+        }
+      )
 
-    if (!res.ok) {
+      if (!res.ok) {
+        alert("Failed to generate next round")
+        return
+      }
+
+      fetchMatches()
+    } catch (err) {
+      console.error("Generate next round failed", err)
       alert("Failed to generate next round")
-      return
     }
-
-    fetchMatches()
   }
 
   const setWinner = async (matchId, winnerId) => {
-    const res = await fetch(`${API}/admin/matches/${matchId}/winner`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-role': 'admin'
-      },
-      body: JSON.stringify({ winner_id: winnerId })
-    })
+    try {
+      const res = await fetch(
+        API_URL + "/admin/matches/" + matchId + "/winner",
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-role': 'admin'
+          },
+          body: JSON.stringify({ winner_id: winnerId })
+        }
+      )
 
-    if (!res.ok) return
+      if (!res.ok) return
 
-    const data = await res.json()
-    fetchMatches()
+      const data = await res.json()
+      fetchMatches()
 
-    if (data.tournament_winner) {
-      alert("Tournament finished!")
-      fetchTournament()
+      if (data.tournament_winner) {
+        alert("Tournament finished!")
+        fetchTournament()
+      }
+    } catch (err) {
+      console.error("Set winner failed", err)
     }
   }
 

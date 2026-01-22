@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../style/dashboard.css'
 
+import API_URL from '../api'
+
 function MyTournaments({ user }) {
   const navigate = useNavigate()
   const [myTournaments, setMyTournaments] = useState([])
@@ -11,19 +13,25 @@ function MyTournaments({ user }) {
     if (!user) return
 
     const fetchMyTournaments = async () => {
-      const res = await fetch(
-        `http://localhost:3000/api/player/requests/my/${user.id}`
-      )
+      try {
+        const res = await fetch(
+          API_URL + "/player/requests/my/" + user.id
+        )
 
-      if (!res.ok) {
+        if (!res.ok) {
+          setMyTournaments([])
+          setLoading(false)
+          return
+        }
+
+        const data = await res.json()
+        setMyTournaments(Array.isArray(data) ? data : [])
+        setLoading(false)
+      } catch (err) {
+        console.error("Failed to fetch my tournaments", err)
         setMyTournaments([])
         setLoading(false)
-        return
       }
-
-      const data = await res.json()
-      setMyTournaments(Array.isArray(data) ? data : [])
-      setLoading(false)
     }
 
     fetchMyTournaments()
